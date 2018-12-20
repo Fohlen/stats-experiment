@@ -56,19 +56,24 @@ stats = load_statistics('12211-0001.csv')
 years = stats.keys()
 
 male_employed_per_year, female_employed_per_year, general_employed_per_year = [], [], []
+male_unemployed_per_year, female_unemployed_per_year, general_unemployed_per_year = [], [], []
 
 for year in years:
     for e in stats[year]:
         if e[Entry.GENDER] == Gender.MALE.value:
             male_employed_per_year.append(int(e[Entry.EMPLOYED - 1]))
+            male_unemployed_per_year.append(int(e[Entry.UNEMPLODED - 1]))
         elif e[Entry.GENDER] == Gender.FEMALE.value:
             female_employed_per_year.append(int(e[Entry.EMPLOYED - 1]))
+            female_unemployed_per_year.append(int(e[Entry.UNEMPLODED - 1]))
         #else:
         #    general_employed_per_year.append(int(e[Entry.EMPLOYED - 1]))
 
 # Plot this
 plt.scatter(years, male_employed_per_year, label='Male employed', c='b')
+#plt.scatter(years, male_unemployed_per_year, label='Male unemployed', c='0.75')
 plt.scatter(years, female_employed_per_year, label='Female employed', c='r')
+#plt.scatter(years, female_unemployed_per_year, label='Female unemployed', c='0.25')
 #plt.scatter(years, general_employed_per_year, label='General employed', c='c')
 plt.xlabel('date')
 plt.ylabel('employed')
