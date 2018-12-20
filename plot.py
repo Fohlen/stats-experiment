@@ -1,8 +1,16 @@
 import os
 import csv
-from enum import IntEnum
+from enum import Enum, IntEnum
 from datetime import datetime
 import matplotlib.pyplot as plt
+
+class Gender(Enum):
+    """
+    Describes the possible genders in the data set
+    """
+    MALE = 'männlich'
+    FEMALE = 'weiblich'
+    GENEREL = 'Allgemein'
 
 class Entry(IntEnum):
     """
@@ -35,13 +43,34 @@ def load_statistics(filename):
             else:
                 date = datetime.strptime(row[Entry.DATE], '%Y')
 
-            stats[date] = row[Entry.EMPLOYED]
+            row.pop(Entry.DATE) # remove duplicate data. NOTE: From now on you must use Entry.FEATURE - 1 as the index
+            if date in stats:
+                stats[date].append(row)
+            else:
+                stats[date] = [row]
 
     return stats
 
-# Plot this
+# Gather data
 stats = load_statistics('12211-0001.csv')
-plt.plot(stats.keys(), stats.values())
+years = stats.keys()
+
+male_employed_per_year, female_employed_per_year, general_employed_per_year = [], [], []
+
+for year in years:
+    for e in stats[year]:
+        if e[Entry.GENDER] == Gender.MALE.value:
+            male_employed_per_year.append(int(e[Entry.EMPLOYED - 1]))
+        elif e[Entry.GENDER] == Gender.FEMALE.value:
+            female_employed_per_year.append(int(e[Entry.EMPLOYED - 1]))
+        #else:
+        #    general_employed_per_year.append(int(e[Entry.EMPLOYED - 1]))
+
+# Plot this
+plt.scatter(years, male_employed_per_year, label='Male employed', c='b')
+plt.scatter(years, female_employed_per_year, label='Female employed', c='r')
+#plt.scatter(years, general_employed_per_year, label='General employed', c='c')
 plt.xlabel('date')
 plt.ylabel('employed')
+plt.legend()
 plt.show()
