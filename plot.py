@@ -70,12 +70,12 @@ for year in years:
         #    general_employed_per_year.append(int(e[Entry.EMPLOYED - 1]))
 
 # Plot this
-plt.scatter(years, male_employed_per_year, label='Male employed', c='b')
+plt.title('German employment rates (microcensus)')
+plt.scatter(years, male_employed_per_year, label='Male', c='b')
 #plt.scatter(years, male_unemployed_per_year, label='Male unemployed', c='0.75')
-plt.scatter(years, female_employed_per_year, label='Female employed', c='r')
+plt.scatter(years, female_employed_per_year, label='Female', c='r')
 #plt.scatter(years, female_unemployed_per_year, label='Female unemployed', c='0.25')
 #plt.scatter(years, general_employed_per_year, label='General employed', c='c')
 plt.xlabel('date')
-plt.ylabel('employed')
-plt.legend()
+plt.ylabel('employed people')
 plt.show()
