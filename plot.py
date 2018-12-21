@@ -53,7 +53,7 @@ def load_statistics(filename):
 
 # Gather data
 stats = load_statistics('12211-0001.csv')
-years = stats.keys()
+years = list(stats.keys())
 
 male_employed_per_year, female_employed_per_year, general_employed_per_year = [], [], []
 male_unemployed_per_year, female_unemployed_per_year, general_unemployed_per_year = [], [], []
@@ -68,6 +68,21 @@ for year in years:
             female_unemployed_per_year.append(int(e[Entry.UNEMPLODED - 1]))
         #else:
         #    general_employed_per_year.append(int(e[Entry.EMPLOYED - 1]))
+
+# Train data
+from sklearn.cluster import KMeans
+
+train_years = [x.date().year for x in years[len(years)//2:]]
+train_employment_female = female_employed_per_year[len(female_employed_per_year)//2:]
+train_employment_male = male_employed_per_year[len(male_employed_per_year)//2:]
+test_employment_female = female_employed_per_year[:len(female_employed_per_year)//2]
+test_employed_male = male_employed_per_year[:len(male_employed_per_year)//2]
+
+train_employment = [(train_years[x], train_employment_female[x]) for x in range(len(train_years))] + [(train_years[x], train_employment_male[x]) for x in range(len(train_years))]
+kmeans = KMeans(n_clusters=2)
+kmeans.fit(train_employment)
+
+print(kmeans.cluster_centers_)
 
 # Plot this
 plt.title('German employment rates (microcensus)')
